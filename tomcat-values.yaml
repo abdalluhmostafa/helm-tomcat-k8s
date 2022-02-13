@@ -1,0 +1,45 @@
+service:
+  type: ClusterIP
+ingress:
+  enabled: true
+  hostname: DOMAIN-NAME
+  certManager: true
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  extraTls:
+  - hosts:
+      - DOMAIN-NAME
+    secretName: DOMAIN-NAME-tls
+##
+replicaCount: 2
+## This will allow tomcat manager 
+tomcatAllowRemoteManagement: 1
+
+## PVC if you want mount pvc to /bitnami/tomcat inside pod
+persistence:
+  enabled: false
+#  storageClass: longhorn ## this will fix frist mount issue
+#  accessModes:
+#    - ReadWriteMany
+#  size: 2Gi
+##
+image:
+  registry: docker.io
+  repository: bitnami/tomcat
+  tag: 10.0.16-debian-10-r23
+  pullPolicy: Always
+
+  ## this for docker registry secret name 
+  #pullSecrets:
+  #- myregistrykey
+
+resources:
+  ## limits:
+  ##    cpu: 500m
+  ##    memory: 1Gi
+  ##
+  limits: {}
+  requests:
+    cpu: 312m
+    memory: 211Mi
